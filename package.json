@@ -1,0 +1,11 @@
+{
+  "name": "understand_ts",
+  "version": "1.0.0",
+  "description": "Understanding Typescript 2020 course project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "G. Daskalov",
+  "license": "ISC"
+}
