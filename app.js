@@ -1,5 +1,7 @@
-var person = {
-    name: 'JD',
-    age: 30
+var add = function (n1, n2, showResult, resultFormat) {
+    var result = n1 + n2;
+    if (showResult) {
+        console.log(resultFormat + " " + result);
+    }
+    return result;
 };
-console.log(person.name);
