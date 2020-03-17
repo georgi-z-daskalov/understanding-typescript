@@ -1,13 +1,8 @@
-var add = function (n1, n2) { return n1 + n2; };
-var printResult = function (num) { return console.log("printResult -> num", num); };
-var addAndHandle = function (n1, n2, cb) {
-    var result = n1 + n2;
-    cb(result);
+var userInput;
+userInput = 5;
+userInput = 'Me';
+var generateError = function (message, code) {
+    throw { message: message, errorCode: code };
 };
-printResult(add(5, 3));
-var combineValues;
-combineValues = add;
-console.log("combineValues", combineValues(7, 5));
-addAndHandle(10, 20, function (result) {
-    console.log('Callback result', result);
-});
+var result = generateError('An error occurred!', 500);
+console.log("result");
