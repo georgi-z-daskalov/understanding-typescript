@@ -29,12 +29,21 @@ class AccountingDepartment extends Department {
     constructor(id, reports) {
         super(id, 'Accounting');
         this.reports = reports;
+        this.lastReport = this.reports[0];
+    }
+    get mostRecentReport() {
+        return this.lastReport;
+    }
+    set mostRecentReport(report) {
+        this.lastReport = report;
     }
     addReport(report) {
         this.reports.push(report);
+        this.lastReport = report;
     }
     removeReport(report) {
         this.reports = this.reports.filter(r => r !== report);
+        this.lastReport = this.reports[this.reports.length - 1];
     }
     printReports() {
         console.log("AccountingDepartment  reports", [...this.reports]);
@@ -45,7 +54,11 @@ finance.addEmployee('JD');
 finance.addEmployee('Rali');
 const itDepartment = new ITDepartment(2, ['JD']);
 itDepartment.printEmployeesInfo();
-const accountingDepartment = new AccountingDepartment(3, ['report1', 'report2']);
+const accountingDepartment = new AccountingDepartment(3, ['report1', 'report2', 'report3', 'report4']);
 accountingDepartment.printReports();
+accountingDepartment.addReport('report5');
 accountingDepartment.removeReport('report1');
 accountingDepartment.printReports();
+console.log("accountingDepartment.mostRecentReport", accountingDepartment.mostRecentReport);
+accountingDepartment.mostRecentReport = 'report2';
+console.log("accountingDepartment.mostRecentReport", accountingDepartment.mostRecentReport);

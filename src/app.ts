@@ -1,7 +1,7 @@
 class Department {
     private employees: string[] = []
 
-    constructor(readonly id: number, private name: string) {}
+    constructor(protected readonly id: number, private name: string) {}
 
     describe(this: Department) {
         console.log(`Department #${this.id}: ${this.name}`)
@@ -28,16 +28,29 @@ class ITDepartment extends Department {
 }
 
 class AccountingDepartment extends Department {
+    private lastReport: string;
+
     constructor(id: number, private reports: string[]) {
         super(id, 'Accounting');
+        this.lastReport = this.reports[0];
+    }
+
+    get mostRecentReport() {
+        return this.lastReport;
+    }
+
+    set mostRecentReport(report: string) {
+        this.lastReport = report;
     }
 
     addReport(report: string) {
         this.reports.push(report);
+        this.lastReport = report;
     }
 
     removeReport(report: string) {
         this.reports = this.reports.filter(r => r !== report);
+        this.lastReport = this.reports[this.reports.length - 1];
     }
     
     printReports() {
@@ -55,7 +68,11 @@ finance.addEmployee('Rali');
 const itDepartment = new ITDepartment(2, ['JD']);
 itDepartment.printEmployeesInfo();
 
-const accountingDepartment = new AccountingDepartment(3, ['report1', 'report2']);
+const accountingDepartment = new AccountingDepartment(3, ['report1', 'report2', 'report3', 'report4']);
 accountingDepartment.printReports();
+accountingDepartment.addReport('report5');
 accountingDepartment.removeReport('report1');
 accountingDepartment.printReports();
+console.log("accountingDepartment.mostRecentReport", accountingDepartment.mostRecentReport);
+accountingDepartment.mostRecentReport = 'report2';
+console.log("accountingDepartment.mostRecentReport", accountingDepartment.mostRecentReport);
