@@ -5,20 +5,23 @@ class Department {
         this.name = name;
         this.employees = [];
     }
-    describe() {
-        console.log(`Department #${this.id}: ${this.name}`);
+    static createEmployee(name) {
+        return { name };
     }
     addEmployee(employee) {
         this.employees.push(employee);
     }
     printEmployeesInfo() {
-        console.log(`Department #${this.id} -> employees ${[...this.employees]}`);
+        console.log(`Department ${this.name} #${this.id} -> employees ${[...this.employees]}`);
     }
 }
 class ITDepartment extends Department {
     constructor(id, admins) {
         super(id, 'IT');
         this.admins = admins;
+    }
+    describe() {
+        console.log('IT Department');
     }
     printEmployeesInfo() {
         super.printEmployeesInfo();
@@ -30,6 +33,16 @@ class AccountingDepartment extends Department {
         super(id, 'Accounting');
         this.reports = reports;
         this.lastReport = this.reports[0];
+    }
+    describe() {
+        console.log('Accounting Department');
+    }
+    static getInstance() {
+        if (AccountingDepartment.instance) {
+            return this.instance;
+        }
+        this.instance = new AccountingDepartment(100, []);
+        return this.instance;
     }
     get mostRecentReport() {
         return this.lastReport;
@@ -49,16 +62,18 @@ class AccountingDepartment extends Department {
         console.log("AccountingDepartment  reports", [...this.reports]);
     }
 }
-const finance = new Department(1, 'Finance');
-finance.addEmployee('JD');
-finance.addEmployee('Rali');
 const itDepartment = new ITDepartment(2, ['JD']);
 itDepartment.printEmployeesInfo();
-const accountingDepartment = new AccountingDepartment(3, ['report1', 'report2', 'report3', 'report4']);
-accountingDepartment.printReports();
-accountingDepartment.addReport('report5');
-accountingDepartment.removeReport('report1');
-accountingDepartment.printReports();
-console.log("accountingDepartment.mostRecentReport", accountingDepartment.mostRecentReport);
-accountingDepartment.mostRecentReport = 'report2';
-console.log("accountingDepartment.mostRecentReport", accountingDepartment.mostRecentReport);
+const accountingDepartment1 = AccountingDepartment.getInstance();
+const accountingDepartment2 = AccountingDepartment.getInstance();
+accountingDepartment1.addReport('report1');
+accountingDepartment1.printReports();
+accountingDepartment2.printReports();
+accountingDepartment1.addReport('report5');
+accountingDepartment1.removeReport('report1');
+accountingDepartment1.printReports();
+console.log("accountingDepartment.mostRecentReport", accountingDepartment1.mostRecentReport);
+accountingDepartment1.mostRecentReport = 'report2';
+console.log("accountingDepartment.mostRecentReport", accountingDepartment1.mostRecentReport);
+const employee1 = Department.createEmployee('JD');
+console.log("employee1", employee1);
