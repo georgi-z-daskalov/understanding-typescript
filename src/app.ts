@@ -1,10 +1,10 @@
 class Department {
     private employees: string[] = []
 
-    constructor(private name: string) {}
+    constructor(private readonly id: number, private name: string) {}
 
     describe(this: Department) {
-        console.log('Department:', this.name)
+        console.log(`Department #${this.id}: ${this.name}`)
     }
 
     addEmployee(employee: string) {
@@ -12,11 +12,11 @@ class Department {
     }
 
     printEmployeesInfo() {
-        console.log("Department -> employees", this.employees)
+        console.log(`Department #${this.id} -> employees ${[...this.employees]}`)
     }
 }
 
-const finance = new Department('Finance');
+const finance = new Department(1, 'Finance');
 finance.addEmployee('JD');
 finance.addEmployee('Rali');
 
