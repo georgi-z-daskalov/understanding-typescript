@@ -1,4 +1,5 @@
 "use strict";
+var _a;
 const printEmployeeInfo = (employee) => {
     console.log("printEmployeeInfo -> employee.name", employee.name);
     if ('priviliges' in employee) {
@@ -74,3 +75,9 @@ const errorBag = {
     email: 'Not a valid email',
     name: 'Name a valid name'
 };
+const fetchedUserData = {
+    id: 'u1',
+    name: 'JD',
+    job: { title: 'FE dev', description: 'Some description' }
+};
+console.log('Job title', (_a = fetchedUserData === null || fetchedUserData === void 0 ? void 0 : fetchedUserData.job) === null || _a === void 0 ? void 0 : _a.title);

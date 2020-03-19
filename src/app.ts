@@ -153,3 +153,11 @@ const errorBag: IErrorContainer = {
     email: 'Not a valid email',
     name: 'Name a valid name'
 }
+
+const fetchedUserData = {
+    id: 'u1',
+    name: 'JD',
+    job: {title: 'FE dev', description: 'Some description'}
+}
+
+console.log('Job title', fetchedUserData?.job?.title);
