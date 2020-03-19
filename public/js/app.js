@@ -47,3 +47,22 @@ const useVehicle = (vehicle) => {
         vehicle.loadCargo(100);
     }
 };
+useVehicle(v1);
+useVehicle(v2);
+const moveAnimal = (animal) => {
+    let speed;
+    switch (animal.type) {
+        case 'bird':
+            speed = animal.flyingSpeed;
+            break;
+        case 'horse':
+            speed = animal.runningSpeed;
+            break;
+    }
+    console.log("moveAnimal -> speed", speed);
+};
+const a1 = {
+    runningSpeed: 11,
+    type: 'horse'
+};
+moveAnimal(a1);
