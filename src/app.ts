@@ -50,13 +50,32 @@ interface IElevatedEmpliyee extends IAdmin, IEmployee {};
 
 type Combinable = string | number;
 
-const add = (a: Combinable, b: Combinable) => {
+// function add  (a: number, b: number): number;
+// function add  (a: string, b: string): string;
+// function add (a: Combinable, b: Combinable) {
+//     if(typeof a === 'string' || typeof b === 'string') {
+//         return a.toString() + b.toString()
+//     }
+
+//     return a + b;
+// }
+
+// overload using arrow function
+interface IAddFunction {
+    (a: number, b: number): number;
+    (a: string, b: string): string;
+}
+
+const add = ((a: Combinable, b: Combinable) => {
     if(typeof a === 'string' || typeof b === 'string') {
         return a.toString() + b.toString()
     }
 
     return a + b;
-}
+}) as IAddFunction;
+
+console.log(add('JD', 'Rali').toUpperCase());
+console.log(add(1,16).toFixed(2));
 
 class Car {
     drive() {

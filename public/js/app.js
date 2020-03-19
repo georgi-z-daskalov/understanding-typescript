@@ -20,12 +20,14 @@ const e2 = {
 printEmployeeInfo(e1);
 printEmployeeInfo(e2);
 ;
-const add = (a, b) => {
+const add = ((a, b) => {
     if (typeof a === 'string' || typeof b === 'string') {
         return a.toString() + b.toString();
     }
     return a + b;
-};
+});
+console.log(add('JD', 'Rali').toUpperCase());
+console.log(add(1, 16).toFixed(2));
 class Car {
     drive() {
         console.log('driving...');
