@@ -26,3 +26,24 @@ const add = (a, b) => {
     }
     return a + b;
 };
+class Car {
+    drive() {
+        console.log('driving...');
+    }
+}
+class Truck {
+    drive() {
+        console.log('driving...');
+    }
+    loadCargo(cargo) {
+        console.log("Truck -> loadCargo -> cargo", cargo);
+    }
+}
+const v1 = new Car();
+const v2 = new Truck();
+const useVehicle = (vehicle) => {
+    vehicle.drive();
+    if (vehicle instanceof Truck) {
+        vehicle.loadCargo(100);
+    }
+};

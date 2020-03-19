@@ -57,3 +57,32 @@ const add = (a: Combinable, b: Combinable) => {
 
     return a + b;
 }
+
+class Car {
+    drive() {
+        console.log('driving...');
+    }
+}
+
+class Truck {
+    drive() {
+        console.log('driving...');
+    }
+
+    loadCargo(cargo: number) {
+        console.log("Truck -> loadCargo -> cargo", cargo)
+    }
+}
+
+type Vehicle = Car | Truck;
+
+const v1 = new Car();
+const v2 = new Truck();
+
+const useVehicle = (vehicle: Vehicle) => {
+    vehicle.drive();
+    if(vehicle instanceof Truck) {
+        vehicle.loadCargo(100);
+    }
+}
+ 
