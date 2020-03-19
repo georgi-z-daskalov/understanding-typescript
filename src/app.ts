@@ -12,3 +12,19 @@ const addNums = <T extends number, U extends number>(num1: T, num2: U) => {
 
 const mergedObj = merge({name: 'JD'}, {age: 37});
 console.log("mergedObj", mergedObj)
+
+interface ILenghty {
+    length: number;
+}
+
+const countAndPrint = <T extends ILenghty>(element: T): [T, string] => {
+    let description = 'Got no value.';
+    if (element.length === 1) {
+        description = 'ELement has 1 element.'
+    } else if (element.length > 0) {
+        description = `Element has ${element.length} elements.`
+    }
+    return [element, description];
+}
+
+console.log(countAndPrint('Helloe!'))
