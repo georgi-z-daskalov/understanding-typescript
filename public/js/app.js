@@ -1,15 +1,28 @@
 "use strict";
-class Person {
-    constructor(name) {
-        this.name = name;
+const printEmployeeInfo = (employee) => {
+    console.log("printEmployeeInfo -> employee.name", employee.name);
+    if ('priviliges' in employee) {
+        console.log("printEmployeeInfo -> employee.priviliges", ...employee.priviliges);
     }
-    greet(phrase) {
-        console.log(`${phrase} ${this.name}`);
+    if ('startDate' in employee) {
+        console.log("printEmployeeInfo -> employee.startDate", employee.startDate);
     }
-    saySomethingMore() {
-        console.log('bla bla');
+};
+const e1 = {
+    name: 'JD',
+    priviliges: ['FE'],
+    startDate: new Date(),
+};
+const e2 = {
+    name: 'Rali',
+    startDate: new Date(),
+};
+printEmployeeInfo(e1);
+printEmployeeInfo(e2);
+;
+const add = (a, b) => {
+    if (typeof a === 'string' || typeof b === 'string') {
+        return a.toString() + b.toString();
     }
-}
-let user1;
-user1 = new Person('JD');
-user1.greet('Hey');
+    return a + b;
+};
