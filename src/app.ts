@@ -57,9 +57,20 @@ textStorage.addItem('JD')
 
 console.log(textStorage.getItems());
 
-const objectStorage = new DataStorage<object>();
-objectStorage.addItem({name: 'JD'});
-objectStorage.addItem({name: 'Rali'});
-objectStorage.removeItem({name: 'JD'});
+interface ICourseGoal {
+    title: string;
+    description: string;
+    completeUntil: Date;
+}
 
-console.log("objectStorage items", objectStorage.getItems())
+const createCourseGoal = (title: string, description: string, completeUntil: Date ): ICourseGoal => {
+    let coarseGoal: Partial<ICourseGoal> = {};
+    coarseGoal.title = title;
+    coarseGoal.description = description;
+    coarseGoal.completeUntil = completeUntil;
+
+    return coarseGoal as ICourseGoal;
+}
+
+const names: Readonly<string[]> = ['JD', 'Rali'];
+// names.push('Jorali');

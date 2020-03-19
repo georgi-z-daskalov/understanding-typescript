@@ -39,8 +39,11 @@ class DataStorage {
 const textStorage = new DataStorage();
 textStorage.addItem('JD');
 console.log(textStorage.getItems());
-const objectStorage = new DataStorage();
-objectStorage.addItem({ name: 'JD' });
-objectStorage.addItem({ name: 'Rali' });
-objectStorage.removeItem({ name: 'JD' });
-console.log("objectStorage items", objectStorage.getItems());
+const createCourseGoal = (title, description, completeUntil) => {
+    let coarseGoal = {};
+    coarseGoal.title = title;
+    coarseGoal.description = description;
+    coarseGoal.completeUntil = completeUntil;
+    return coarseGoal;
+};
+const names = ['JD', 'Rali'];
