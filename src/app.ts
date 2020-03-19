@@ -34,3 +34,32 @@ const extractAndConvert = <T extends object, U extends keyof T>(obj: T, key: U) 
 }
 
 extractAndConvert({name: 'JD'}, 'name')
+
+class DataStorage<T> {
+    private data: T[] = [];
+
+    addItem(item: T) {
+        this.data.push(item);
+    }
+
+    removeItem(item: T) {
+        this.data.splice(this.data.indexOf(item), 1);
+    }
+
+    getItems() {
+        return [...this.data];
+    }
+}
+
+const textStorage = new DataStorage<string>();
+
+textStorage.addItem('JD')
+
+console.log(textStorage.getItems());
+
+const objectStorage = new DataStorage<object>();
+objectStorage.addItem({name: 'JD'});
+objectStorage.addItem({name: 'Rali'});
+objectStorage.removeItem({name: 'JD'});
+
+console.log("objectStorage items", objectStorage.getItems())

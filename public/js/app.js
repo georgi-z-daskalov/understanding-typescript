@@ -22,3 +22,25 @@ const extractAndConvert = (obj, key) => {
     return 'Value: ' + obj[key];
 };
 extractAndConvert({ name: 'JD' }, 'name');
+class DataStorage {
+    constructor() {
+        this.data = [];
+    }
+    addItem(item) {
+        this.data.push(item);
+    }
+    removeItem(item) {
+        this.data.splice(this.data.indexOf(item), 1);
+    }
+    getItems() {
+        return [...this.data];
+    }
+}
+const textStorage = new DataStorage();
+textStorage.addItem('JD');
+console.log(textStorage.getItems());
+const objectStorage = new DataStorage();
+objectStorage.addItem({ name: 'JD' });
+objectStorage.addItem({ name: 'Rali' });
+objectStorage.removeItem({ name: 'JD' });
+console.log("objectStorage items", objectStorage.getItems());
