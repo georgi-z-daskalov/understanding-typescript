@@ -81,3 +81,6 @@ const fetchedUserData = {
     job: { title: 'FE dev', description: 'Some description' }
 };
 console.log('Job title', (_a = fetchedUserData === null || fetchedUserData === void 0 ? void 0 : fetchedUserData.job) === null || _a === void 0 ? void 0 : _a.title);
+const userInputText = false;
+const storedData = userInputText !== null && userInputText !== void 0 ? userInputText : 'DDEFAULT';
+console.log("storedData", storedData);

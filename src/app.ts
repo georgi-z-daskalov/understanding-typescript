@@ -161,3 +161,8 @@ const fetchedUserData = {
 }
 
 console.log('Job title', fetchedUserData?.job?.title);
+
+const userInputText = false;
+
+const storedData = userInputText ?? 'DDEFAULT';
+console.log("storedData", storedData)
