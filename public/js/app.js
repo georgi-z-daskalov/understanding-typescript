@@ -68,3 +68,7 @@ const a1 = {
 moveAnimal(a1);
 const userInput = document.getElementById('user-input');
 userInput.value = 'Hey';
+const errorBag = {
+    email: 'Not a valid email',
+    name: 'Name a valid name'
+};

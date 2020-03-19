@@ -125,3 +125,12 @@ moveAnimal(a1);
 // const userInput = <HTMLInputElement>document.getElementById('user-input')!;
 const userInput = document.getElementById('user-input')! as HTMLInputElement;
 userInput.value = 'Hey'
+
+interface IErrorContainer {
+    [key: string]: string
+}
+
+const errorBag: IErrorContainer = {
+    email: 'Not a valid email',
+    name: 'Name a valid name'
+}
