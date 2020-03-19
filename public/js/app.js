@@ -18,3 +18,7 @@ const countAndPrint = (element) => {
     return [element, description];
 };
 console.log(countAndPrint('Helloe!'));
+const extractAndConvert = (obj, key) => {
+    return 'Value: ' + obj[key];
+};
+extractAndConvert({ name: 'JD' }, 'name');

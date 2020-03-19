@@ -28,3 +28,9 @@ const countAndPrint = <T extends ILenghty>(element: T): [T, string] => {
 }
 
 console.log(countAndPrint('Helloe!'))
+
+const extractAndConvert = <T extends object, U extends keyof T>(obj: T, key: U) => {
+    return 'Value: ' + obj[key];
+}
+
+extractAndConvert({name: 'JD'}, 'name')
