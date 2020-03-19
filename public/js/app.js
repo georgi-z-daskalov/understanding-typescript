@@ -66,3 +66,5 @@ const a1 = {
     type: 'horse'
 };
 moveAnimal(a1);
+const userInput = document.getElementById('user-input');
+userInput.value = 'Hey';

@@ -121,3 +121,7 @@ const a1: Animal = {
 };
 
 moveAnimal(a1);
+
+// const userInput = <HTMLInputElement>document.getElementById('user-input')!;
+const userInput = document.getElementById('user-input')! as HTMLInputElement;
+userInput.value = 'Hey'
