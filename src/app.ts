@@ -1,25 +1,23 @@
-interface Named {
-    readonly name: string;
-    outputName?: string;
+type Admin = {
+    name: string;
+    priviliges: string[];
 }
 
-interface Greetable extends Named {
-    greet(phrase: string): void;
+type Employee = {
+    name: string;
+    startDate: Date;
 }
 
-class Person implements Greetable {
-    constructor(public name: string) {}
+type ElevatedEmpliyee = Admin & Employee;
 
-    greet(phrase: string) {
-        console.log(`${phrase} ${this.name}`)
-    }
-
-    saySomethingMore() {
-        console.log('bla bla');
-    }
+interface IAdmin {
+    name: string;
+    priviliges: string[];
 }
 
-let user1: Greetable;
-user1 = new Person('JD');
+interface IEmployee {
+    name: string;
+    startDate: Date;
+}
 
-user1.greet('Hey');
+interface IElevatedEmpliyee extends IAdmin, IEmployee {};
