@@ -1,49 +1,22 @@
 "use strict";
-const merge = (objA, objB) => {
-    return Object.assign(objA, objB);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-const addNums = (num1, num2) => {
-    return (num1 + num2).toFixed(2);
+const Logger = (constructor) => {
+    console.log('Logging');
+    console.log(constructor);
 };
-const mergedObj = merge({ name: 'JD' }, { age: 37 });
-console.log("mergedObj", mergedObj);
-const countAndPrint = (element) => {
-    let description = 'Got no value.';
-    if (element.length === 1) {
-        description = 'ELement has 1 element.';
-    }
-    else if (element.length > 0) {
-        description = `Element has ${element.length} elements.`;
-    }
-    return [element, description];
-};
-console.log(countAndPrint('Helloe!'));
-const extractAndConvert = (obj, key) => {
-    return 'Value: ' + obj[key];
-};
-extractAndConvert({ name: 'JD' }, 'name');
-class DataStorage {
+let Person = class Person {
     constructor() {
-        this.data = [];
+        this.name = 'JD';
+        console.log('Started!');
     }
-    addItem(item) {
-        this.data.push(item);
-    }
-    removeItem(item) {
-        this.data.splice(this.data.indexOf(item), 1);
-    }
-    getItems() {
-        return [...this.data];
-    }
-}
-const textStorage = new DataStorage();
-textStorage.addItem('JD');
-console.log(textStorage.getItems());
-const createCourseGoal = (title, description, completeUntil) => {
-    let coarseGoal = {};
-    coarseGoal.title = title;
-    coarseGoal.description = description;
-    coarseGoal.completeUntil = completeUntil;
-    return coarseGoal;
 };
-const names = ['JD', 'Rali'];
+Person = __decorate([
+    Logger
+], Person);
+const person = new Person();
+console.log("person", person);
