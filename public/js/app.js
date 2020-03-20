@@ -5,9 +5,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-const Logger = (constructor) => {
-    console.log('Logging');
-    console.log(constructor);
+const Logger = (logString) => {
+    return (constructor) => {
+        console.log(logString);
+        console.log(constructor);
+    };
+};
+const WithTemplate = (template, hookId) => {
+    return (constructor) => {
+        const element = document.getElementById(hookId);
+        const p = new constructor();
+        if (element) {
+            element.innerHTML = template;
+            element.querySelector('h1').textContent = p.name;
+        }
+    };
 };
 let Person = class Person {
     constructor() {
@@ -16,7 +28,7 @@ let Person = class Person {
     }
 };
 Person = __decorate([
-    Logger
+    WithTemplate('<h1>My person object</h1>', 'app')
 ], Person);
 const person = new Person();
 console.log("person", person);
