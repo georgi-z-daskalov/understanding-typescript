@@ -6,12 +6,16 @@ const Logger = (logString: string) => {
 }
 
 const WithTemplate = (template: string, hookId: string) =>{
-    return (constructor: any) => {
-        const element = document.getElementById(hookId);
-        const p = new constructor();
-        if (element) {
-            element.innerHTML = template;
-            element.querySelector('h1')!.textContent = p.name;
+    return <T extends {new(...args: any[]): { name: string}}>(originalConstructor: T) => {
+        return class extends originalConstructor {
+            constructor(..._: any[]) {
+                super();
+                const element = document.getElementById(hookId);
+                if (element) {
+                    element.innerHTML = template;
+                    element.querySelector('h1')!.textContent = this.name;
+                }
+            }
         }
     }
 }
@@ -26,8 +30,8 @@ class Person {
     }
 }
 
-const person = new Person();
-console.log("person", person);
+// const person = new Person();
+// console.log("person", person);
 
 const Log = (target: any, propertyName: string | Symbol) => {
     console.log('Property decorator!');

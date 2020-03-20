@@ -15,13 +15,17 @@ const Logger = (logString) => {
     };
 };
 const WithTemplate = (template, hookId) => {
-    return (constructor) => {
-        const element = document.getElementById(hookId);
-        const p = new constructor();
-        if (element) {
-            element.innerHTML = template;
-            element.querySelector('h1').textContent = p.name;
-        }
+    return (originalConstructor) => {
+        return class extends originalConstructor {
+            constructor(..._) {
+                super();
+                const element = document.getElementById(hookId);
+                if (element) {
+                    element.innerHTML = template;
+                    element.querySelector('h1').textContent = this.name;
+                }
+            }
+        };
     };
 };
 let Person = class Person {
@@ -34,8 +38,6 @@ Person = __decorate([
     Logger('Logging'),
     WithTemplate('<h1>My person object</h1>', 'app')
 ], Person);
-const person = new Person();
-console.log("person", person);
 const Log = (target, propertyName) => {
     console.log('Property decorator!');
     console.log(target, propertyName);
