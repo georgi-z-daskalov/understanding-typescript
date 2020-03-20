@@ -86,31 +86,111 @@
 //     }
 // }
 
-const AutoBind = (_: any, _2: string, descriptor: PropertyDescriptor) => {
-    console.log('descriptor', descriptor);
+// const AutoBind = (_: any, _2: string, descriptor: PropertyDescriptor) => {
+//     console.log('descriptor', descriptor);
 
-    const originalMethod = descriptor.value;
-    const adjustedDescriptor: PropertyDescriptor = {
-        configurable: true,
-        enumerable: false,
-        get() {
-            const boundFunction = originalMethod.bind(this);
-            return boundFunction;
-        },
-    };
-    return adjustedDescriptor;
-}
+//     const originalMethod = descriptor.value;
+//     const adjustedDescriptor: PropertyDescriptor = {
+//         configurable: true,
+//         enumerable: false,
+//         get() {
+//             const boundFunction = originalMethod.bind(this);
+//             return boundFunction;
+//         },
+//     };
+//     return adjustedDescriptor;
+// }
 
-class Printer {
-    message = 'This works!';
+// class Printer {
+//     message = 'This works!';
 
-    @AutoBind
-    showMessage() {
-        console.log(this.message);
+//     @AutoBind
+//     showMessage() {
+//         console.log(this.message);
+//     }
+// }
+
+// const p = new Printer();
+
+// const button = document.querySelector('button')!;
+// button.addEventListener('click', p.showMessage);
+
+interface IValidatorConfig {
+    [property: string]: {
+        [validateProp: string]: string[]
     }
 }
 
-const p = new Printer();
+const registerValidators: IValidatorConfig = {};
 
-const button = document.querySelector('button')!;
-button.addEventListener('click', p.showMessage);
+const RequiredValue = (target: any, propertyName: string) => {
+    console.log("RequiredValue -> propertyName", propertyName)
+    registerValidators[target.constructor.name] = {
+        ...registerValidators[target.constructor.name],
+        [propertyName]: ['required']
+    }
+};
+
+const PositiveNumber = (target: any, propertyName: string) => {
+    registerValidators[target.constructor.name] = {
+        ...registerValidators[target.constructor.name],
+        [propertyName]: ['positive']
+    }
+};
+
+const validate = (obj: any) => {
+    const objValidatorConfig = registerValidators[obj.constructor.name];
+    if (!objValidatorConfig) {
+        return true;
+    } else {
+        let result: boolean = true;
+        Object.keys(objValidatorConfig).forEach((name: string) => {
+            objValidatorConfig[name].forEach((validator: string) => {
+                switch(validator) {
+                    case 'required':
+                        result = result && !!obj[name]
+                        break;
+                    case 'positive':
+                        result = result && obj[name] > 0;
+                        break;
+                    default:
+                        result = true;
+                        break;
+                }
+            })
+        })
+
+        return result;
+    }
+};
+
+class Course {
+    @RequiredValue
+    title: string;
+    @PositiveNumber
+    price: number;
+
+    constructor(t: string, p: number) {
+        this.title = t;
+        this.price = p;
+    }
+};
+
+
+const courseForm: HTMLFormElement = document.querySelector('form')!;
+courseForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const titleEl = document.getElementById('title') as HTMLInputElement;
+    const priceEl = document.getElementById('price') as HTMLInputElement;
+
+    const title = titleEl.value;
+    console.log("title", title)
+    const price = +priceEl.value;
+    const course = new Course(title, price);
+
+    console.log("registerValidators", registerValidators)
+    if(!validate(course)) {
+        console.log('Validation error!');
+        return;
+    }
+})
