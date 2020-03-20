@@ -28,6 +28,7 @@ let Person = class Person {
     }
 };
 Person = __decorate([
+    Logger('Logging'),
     WithTemplate('<h1>My person object</h1>', 'app')
 ], Person);
 const person = new Person();

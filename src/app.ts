@@ -16,6 +16,7 @@ const WithTemplate = (template: string, hookId: string) =>{
     }
 }
 
+@Logger('Logging')
 @WithTemplate('<h1>My person object</h1>', 'app')
 class Person {
     name = 'JD';
