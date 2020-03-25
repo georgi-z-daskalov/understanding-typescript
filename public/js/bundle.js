@@ -1,6 +1,6 @@
-"use strict";
-var App;
-(function (App) {
+define("components/base-component", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     class Component {
         constructor(templateId, hostElementId, insertAtStart, newElementId) {
             this.attach = (isAtStart) => {
@@ -16,15 +16,39 @@ var App;
             this.attach(insertAtStart);
         }
     }
-    App.Component = Component;
-})(App || (App = {}));
-var App;
-(function (App) {
-    let ProjectStatus;
+    exports.Component = Component;
+});
+define("util/validation", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.validate = (validatableInput) => {
+        let isValid = true;
+        if (validatableInput.required) {
+            isValid = isValid && validatableInput.value.toString().trim().length > 0;
+        }
+        if (validatableInput.minLength != null && typeof validatableInput.value === 'string') {
+            isValid = isValid && validatableInput.value.length >= validatableInput.minLength;
+        }
+        if (validatableInput.maxLength != null && typeof validatableInput.value === 'string') {
+            isValid = isValid && validatableInput.value.length <= validatableInput.maxLength;
+        }
+        if (validatableInput.min != null && typeof validatableInput.value === 'number') {
+            isValid = isValid && validatableInput.value >= validatableInput.min;
+        }
+        if (validatableInput.max != null && typeof validatableInput.value === 'number') {
+            isValid = isValid && validatableInput.value <= validatableInput.max;
+        }
+        return isValid;
+    };
+});
+define("models/project", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var ProjectStatus;
     (function (ProjectStatus) {
         ProjectStatus[ProjectStatus["ACTIVE"] = 0] = "ACTIVE";
         ProjectStatus[ProjectStatus["FINISHED"] = 1] = "FINISHED";
-    })(ProjectStatus = App.ProjectStatus || (App.ProjectStatus = {}));
+    })(ProjectStatus = exports.ProjectStatus || (exports.ProjectStatus = {}));
     class Project {
         constructor(id, title, description, people, status) {
             this.id = id;
@@ -34,11 +58,120 @@ var App;
             this.status = status;
         }
     }
-    App.Project = Project;
-})(App || (App = {}));
-var App;
-(function (App) {
-    class ProjectItem extends App.Component {
+    exports.Project = Project;
+});
+define("state/project-state", ["require", "exports", "models/project"], function (require, exports, project_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class State {
+        constructor() {
+            this.listeners = [];
+            this.addListener = (listener) => {
+                this.listeners.push(listener);
+            };
+        }
+    }
+    class ProjectState extends State {
+        constructor() {
+            super();
+            this.projects = [];
+            this.addProject = (title, description, people) => {
+                const newProject = new project_1.Project(Math.random().toString(), title, description, people, project_1.ProjectStatus.ACTIVE);
+                this.projects.push(newProject);
+                this.updateListeners();
+            };
+            this.moveProject = (projectId, newStatus) => {
+                const project = this.projects.find(pr => projectId === pr.id);
+                if (project && project.status !== newStatus) {
+                    project.status = newStatus;
+                    this.updateListeners();
+                }
+            };
+            this.updateListeners = () => {
+                this.listeners.forEach(listener => {
+                    listener(this.projects.slice());
+                });
+            };
+        }
+        static getInstance() {
+            if (this.instance) {
+                return this.instance;
+            }
+            this.instance = new ProjectState();
+            return this.instance;
+        }
+    }
+    exports.ProjectState = ProjectState;
+    exports.projectState = ProjectState.getInstance();
+});
+define("components/project-input", ["require", "exports", "components/base-component", "util/validation", "state/project-state"], function (require, exports, base_component_1, validation_1, project_state_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class ProjectInput extends base_component_1.Component {
+        constructor() {
+            super('project-input', 'app', true, 'user-input');
+            this.configure = () => {
+                this.element.addEventListener('submit', this.submitHandler);
+            };
+            this.renderContent = () => { };
+            this.getUserInput = () => {
+                const titleValue = this.titleInputElement.value;
+                const descriptionValue = this.descriptionInputElement.value;
+                const peopleValue = +this.peopleInputElement.value;
+                const titleValidate = {
+                    value: titleValue,
+                    required: true
+                };
+                const descriptionValidate = {
+                    value: descriptionValue,
+                    required: true,
+                    minLength: 5
+                };
+                const peopleValidate = {
+                    value: peopleValue,
+                    min: 1,
+                    max: 5
+                };
+                if (validation_1.validate(titleValidate) &&
+                    validation_1.validate(descriptionValidate) &&
+                    validation_1.validate(peopleValidate)) {
+                    return [titleValue, descriptionValue, +peopleValue];
+                }
+                else {
+                    console.log('invalid input!');
+                    return;
+                }
+            };
+            this.submitHandler = (event) => {
+                event.preventDefault();
+                const userInput = this.getUserInput();
+                if (Array.isArray(userInput)) {
+                    const [title, description, people] = userInput;
+                    project_state_1.projectState.addProject(title, description, people);
+                    this.clearInputs();
+                }
+            };
+            this.clearInputs = () => {
+                this.titleInputElement.value = '';
+                this.descriptionInputElement.value = '';
+                this.peopleInputElement.value = '';
+            };
+            this.titleInputElement = this.element.querySelector('#title');
+            this.descriptionInputElement = this.element.querySelector('#description');
+            this.peopleInputElement = this.element.querySelector('#people');
+            this.configure();
+        }
+    }
+    exports.ProjectInput = ProjectInput;
+});
+define("models/drag-drop", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+});
+define("components/project-item", ["require", "exports", "components/base-component"], function (require, exports, base_component_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class ProjectItem extends base_component_2.Component {
         constructor(hostId, project) {
             super('single-project', hostId, false, project.id);
             this.dragStart = (event) => {
@@ -68,54 +201,12 @@ var App;
             return `${this.project.people} persons`;
         }
     }
-    App.ProjectItem = ProjectItem;
-})(App || (App = {}));
-var App;
-(function (App) {
-    class State {
-        constructor() {
-            this.listeners = [];
-            this.addListener = (listener) => {
-                this.listeners.push(listener);
-            };
-        }
-    }
-    class ProjectState extends State {
-        constructor() {
-            super();
-            this.projects = [];
-            this.addProject = (title, description, people) => {
-                const newProject = new App.Project(Math.random().toString(), title, description, people, App.ProjectStatus.ACTIVE);
-                this.projects.push(newProject);
-                this.updateListeners();
-            };
-            this.moveProject = (projectId, newStatus) => {
-                const project = this.projects.find(pr => projectId === pr.id);
-                if (project && project.status !== newStatus) {
-                    project.status = newStatus;
-                    this.updateListeners();
-                }
-            };
-            this.updateListeners = () => {
-                this.listeners.forEach(listener => {
-                    listener(this.projects.slice());
-                });
-            };
-        }
-        static getInstance() {
-            if (this.instance) {
-                return this.instance;
-            }
-            this.instance = new ProjectState();
-            return this.instance;
-        }
-    }
-    App.ProjectState = ProjectState;
-    App.projectState = ProjectState.getInstance();
-})(App || (App = {}));
-var App;
-(function (App) {
-    class ProjectList extends App.Component {
+    exports.ProjectItem = ProjectItem;
+});
+define("components/project-list", ["require", "exports", "components/base-component", "models/project", "state/project-state", "components/project-item"], function (require, exports, base_component_3, project_2, project_state_2, project_item_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class ProjectList extends base_component_3.Component {
         constructor(type) {
             super('project-list', 'app', false, `${type}-projects`);
             this.type = type;
@@ -129,7 +220,7 @@ var App;
             };
             this.dropHandler = (event) => {
                 const projectId = event.dataTransfer.getData('text/plain');
-                App.projectState.moveProject(projectId, this.type === 'active' ? App.ProjectStatus.ACTIVE : App.ProjectStatus.FINISHED);
+                project_state_2.projectState.moveProject(projectId, this.type === 'active' ? project_2.ProjectStatus.ACTIVE : project_2.ProjectStatus.FINISHED);
             };
             this.dragLeaveHandler = (_event) => {
                 const listEl = this.element.querySelector('ul');
@@ -139,19 +230,19 @@ var App;
                 const list = document.getElementById(`${this.type}-projects-list`);
                 list.innerHTML = '';
                 this.assignedProjects.forEach((project) => {
-                    new App.ProjectItem(this.element.querySelector('ul').id, project);
+                    new project_item_1.ProjectItem(this.element.querySelector('ul').id, project);
                 });
             };
             this.configure = () => {
                 this.element.addEventListener('dragover', this.dragOverHandler);
                 this.element.addEventListener('drop', this.dropHandler);
                 this.element.addEventListener('dragleave', this.dragLeaveHandler);
-                App.projectState.addListener((projects) => {
+                project_state_2.projectState.addListener((projects) => {
                     const relevantProjects = projects.filter(project => {
                         if (this.type === 'active') {
-                            return project.status === App.ProjectStatus.ACTIVE;
+                            return project.status === project_2.ProjectStatus.ACTIVE;
                         }
-                        return project.status === App.ProjectStatus.FINISHED;
+                        return project.status === project_2.ProjectStatus.FINISHED;
                     });
                     this.assignedProjects = relevantProjects;
                     this.renderProjects();
@@ -167,92 +258,12 @@ var App;
             this.renderContent();
         }
     }
-    App.ProjectList = ProjectList;
-})(App || (App = {}));
-var App;
-(function (App) {
-    App.validate = (validatableInput) => {
-        let isValid = true;
-        if (validatableInput.required) {
-            isValid = isValid && validatableInput.value.toString().trim().length > 0;
-        }
-        if (validatableInput.minLength != null && typeof validatableInput.value === 'string') {
-            isValid = isValid && validatableInput.value.length >= validatableInput.minLength;
-        }
-        if (validatableInput.maxLength != null && typeof validatableInput.value === 'string') {
-            isValid = isValid && validatableInput.value.length <= validatableInput.maxLength;
-        }
-        if (validatableInput.min != null && typeof validatableInput.value === 'number') {
-            isValid = isValid && validatableInput.value >= validatableInput.min;
-        }
-        if (validatableInput.max != null && typeof validatableInput.value === 'number') {
-            isValid = isValid && validatableInput.value <= validatableInput.max;
-        }
-        return isValid;
-    };
-})(App || (App = {}));
-var App;
-(function (App) {
-    class ProjectInput extends App.Component {
-        constructor() {
-            super('project-input', 'app', true, 'user-input');
-            this.configure = () => {
-                this.element.addEventListener('submit', this.submitHandler);
-            };
-            this.renderContent = () => { };
-            this.getUserInput = () => {
-                const titleValue = this.titleInputElement.value;
-                const descriptionValue = this.descriptionInputElement.value;
-                const peopleValue = +this.peopleInputElement.value;
-                const titleValidate = {
-                    value: titleValue,
-                    required: true
-                };
-                const descriptionValidate = {
-                    value: descriptionValue,
-                    required: true,
-                    minLength: 5
-                };
-                const peopleValidate = {
-                    value: peopleValue,
-                    min: 1,
-                    max: 5
-                };
-                if (App.validate(titleValidate) &&
-                    App.validate(descriptionValidate) &&
-                    App.validate(peopleValidate)) {
-                    return [titleValue, descriptionValue, +peopleValue];
-                }
-                else {
-                    console.log('invalid input!');
-                    return;
-                }
-            };
-            this.submitHandler = (event) => {
-                event.preventDefault();
-                const userInput = this.getUserInput();
-                if (Array.isArray(userInput)) {
-                    const [title, description, people] = userInput;
-                    App.projectState.addProject(title, description, people);
-                    this.clearInputs();
-                }
-            };
-            this.clearInputs = () => {
-                this.titleInputElement.value = '';
-                this.descriptionInputElement.value = '';
-                this.peopleInputElement.value = '';
-            };
-            this.titleInputElement = this.element.querySelector('#title');
-            this.descriptionInputElement = this.element.querySelector('#description');
-            this.peopleInputElement = this.element.querySelector('#people');
-            this.configure();
-        }
-    }
-    App.ProjectInput = ProjectInput;
-})(App || (App = {}));
-var App;
-(function (App) {
-    const projectInput = new App.ProjectInput();
-    const activeProjectList = new App.ProjectList('active');
-    const finishedProjectList = new App.ProjectList('finished');
-})(App || (App = {}));
+    exports.ProjectList = ProjectList;
+});
+define("app", ["require", "exports", "components/project-input", "components/project-list"], function (require, exports, project_input_1, project_list_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    new project_input_1.ProjectInput();
+    new project_list_1.ProjectList('active');
+    new project_list_1.ProjectList('finished');
+});
